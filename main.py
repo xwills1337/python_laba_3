@@ -71,7 +71,7 @@ class GismeteoApplication(QWidget):
         btn_10 = QPushButton('Вызвать итератор датасета разбитого по неделям', self)
         btn_10.move(0, 360)
         btn_10.resize(350, 40)
-        # btn_10.clicked.connect()
+        btn_10.clicked.connect(self.start_iter_week)
 
         btn_11 = QPushButton('Вызвать итератор исходного датасета', self)
         btn_11.move(0, 400)
@@ -210,6 +210,50 @@ class GismeteoApplication(QWidget):
                 elif window_1.clickedButton().text() == 'Отмена':
                     break
             i = i + 1
+
+    def start_iter_week(self):
+        i = 1
+        while i < 2:
+            _msg = QMessageBox()
+            _msg.setWindowTitle('Сообщение')
+            _msg.setText('Выберите директорию датасета разбитого по неделям')
+            _msg.exec_()
+            file_path = QFileDialog.getOpenFileName(self, 'Select Folder', filter="*.csv")[0]
+            if not os.path.exists(file_path):
+                break
+            res_str = str(file_path)
+            while True:
+                if res_str[-1] == '/':
+                    break;
+                res_str = res_str[:-1]
+            obj = iterators.DateIteratorYearOrWeek(res_str)
+
+            window_1 = QMessageBox()
+            window_1.addButton('Начать', QMessageBox.AcceptRole)
+            window_1.addButton('Отмена', QMessageBox.RejectRole)
+            window_1.setWindowTitle('Итератор')
+            window_1.exec()
+
+            while True:
+
+                if window_1.clickedButton().text() == 'Начать':
+
+                    window_2 = QMessageBox()
+                    item = next(obj)
+                    text = 'Вывод итератора:' + str(item)
+                    window_2.setWindowTitle('Результат итерации')
+                    window_2.setText(text)
+                    window_2.addButton('Продолжить', QMessageBox.AcceptRole)
+                    window_2.addButton('Прекратить итерацию', QMessageBox.RejectRole)
+                    window_2.exec()
+
+                    if window_2.clickedButton().text() == 'Прекратить итерацию':
+                        break
+
+                elif window_1.clickedButton().text() == 'Отмена':
+                    break
+            i = i + 1
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

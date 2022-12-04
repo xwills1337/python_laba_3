@@ -37,7 +37,7 @@ class GismeteoApplication(QWidget):
         btn_4 = QPushButton('Разделить исходный файл по неделям', self)
         btn_4.move(0, 80)
         btn_4.resize(350, 40)
-        # btn_4.clicked.connect()
+        btn_4.clicked.connect(self.start_create_week)
 
         btn_5 = QPushButton('Найти данные по дате в файлах X.csv и Y.csv', self)
         btn_5.move(0, 120)
@@ -80,6 +80,29 @@ class GismeteoApplication(QWidget):
         exit_button.resize(350, 40)
 
         self.show()
+
+    def start_create_week(self):
+        i = 1
+        while i < 2:
+            _msg = QMessageBox()
+            _msg.setWindowTitle('Сообщение')
+            _msg.setText('Выберите исходный файл, затем директорию куда сохранить вывод')
+            _msg.exec_()
+
+            file_path = QFileDialog.getOpenFileName(self, "Напишите название файла", filter="*.csv")[0]
+            output_directory = QFileDialog.getExistingDirectory(self, 'Select Folder')
+
+            if not os.path.exists(file_path):
+                break
+            if not os.path.exists(output_directory):
+                break
+
+            script_3.main_2(file_path, output_directory)
+            done_msg = QMessageBox()
+            done_msg.setWindowTitle('Сообщение')
+            done_msg.setText('Файлы созданы по адресу :' + str(os.path.join(output_directory)))
+            done_msg.exec_()
+            i = i + 1
 
     def start_create_year(self):
         i = 1

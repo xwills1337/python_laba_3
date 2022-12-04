@@ -14,14 +14,17 @@ def create_file1(df: pd.DataFrame, mas: list[int], output_directory: str) -> Non
     lf.to_csv(output_directory + '/' + data + ".csv", sep=';', encoding='cp1251', index=False)
 
 
-if __name__ == "__main__":
-
-    pf = pd.read_csv('data.csv', sep=';', encoding='cp1251')
+def main_2(file_path: str, output_directory: str) -> None:
+    pf = pd.read_csv(file_path, sep=';', encoding='cp1251')
     mas_1 = list(range(7))
     max_1 = pf.shape[0]
 
     while max_1 > 0:
-        create_file1(pf, mas_1)
+        create_file1(pf, mas_1, output_directory)
         mas_1 = [i + 7 for i in mas_1]
         max_1 = max_1 - 7
+
+
+if __name__ == "__main__":
+    main_2('data.csv')
 

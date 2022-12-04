@@ -47,7 +47,7 @@ class DateIteratorXY:
 class DateIteratorYearOrWeek:
 
     def __init__(self, name):
-
+        name = name + '/'
         self.counter = 0
         self.df = pd.DataFrame()
         for root, dirs, files in os.walk(name):
@@ -76,9 +76,9 @@ if __name__ == "__main__":
     # obj = DateIterator_X_Y('X.csv', 'Y.csv')
     # while(True):
     #     print(next(obj))
-    # obj = DateIterator_year_or_week('files_y/')
+    # obj = DateIterator_year_or_week('files_y')
     # while(True):
     #    print(next(obj))
-    obj = DateIteratorYearOrWeek('files_w/')
+    obj = DateIteratorYearOrWeek('files_w')
     while True:
         print(next(obj))

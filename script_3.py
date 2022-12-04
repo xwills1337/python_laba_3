@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def create_file1(df: pd.DataFrame, mas: list[int]) -> None:
+def create_file1(df: pd.DataFrame, mas: list[int], output_directory: str) -> None:
     """ Creates a .csv file with single week data
     Args:
         df (pd.DataFrame): this DataFrame
@@ -11,7 +11,7 @@ def create_file1(df: pd.DataFrame, mas: list[int]) -> None:
     """
     lf = df.loc[mas[0]:mas[-1]]
     data = lf['Дата'].iloc[0].replace('-', '') + "_" + lf['Дата'].iloc[lf.shape[0] - 1].replace('-', '')
-    lf.to_csv(data + ".csv", sep=';', encoding='cp1251', index=False)
+    lf.to_csv(output_directory + '/' + data + ".csv", sep=';', encoding='cp1251', index=False)
 
 
 if __name__ == "__main__":

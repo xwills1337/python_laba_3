@@ -14,7 +14,7 @@ def create_data_2(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def create_file(df: pd.DataFrame, year: int) -> None:
+def create_file(df: pd.DataFrame, year: int, output_directory: str) -> None:
     """ Creates a .csv file with single year data
     Args:
         df (pd.DataFrame): this DataFrame
@@ -25,7 +25,7 @@ def create_file(df: pd.DataFrame, year: int) -> None:
     lf = df[df['data_2'] == year]
     data = str(lf['Дата'].iloc[0]).replace('-', '') + "_" + str(lf['Дата'].iloc[lf.shape[0] - 1]).replace('-', '')
     del lf['data_2']
-    lf.to_csv(data + ".csv", sep=';', encoding='cp1251', index=False)
+    lf.to_csv(output_directory + '/' + data + ".csv", sep=';', encoding='cp1251', index=False)
 
 
 if __name__ == "__main__":

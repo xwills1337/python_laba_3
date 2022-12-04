@@ -21,7 +21,6 @@ class GismeteoApplication(QWidget):
 
     def application(self):
         self.window()
-        print(1)
         self.resize(600, 480)
         self.setWindowTitle("Application")
 
@@ -62,7 +61,7 @@ class GismeteoApplication(QWidget):
         btn_8 = QPushButton('Вызвать итератор датасета разбитого на файлы X.csv и Y.csv', self)
         btn_8.move(0, 280)
         btn_8.resize(350, 40)
-        # btn_8.clicked.connect()
+        btn_8.clicked.connect(self.start_iter_xy)
 
         btn_9 = QPushButton('Вызвать итератор датасета разбитого по годам', self)
         btn_9.move(0, 320)
@@ -87,37 +86,87 @@ class GismeteoApplication(QWidget):
         self.show()
 
     def start_iter(self):
-        _msg = QMessageBox()
-        _msg.setWindowTitle('Сообщение')
-        _msg.setText('Выберите исходный файл, по которому провести итерацию')
-        _msg.exec_()
-        file_path = QFileDialog.getOpenFileName(self, 'Select Folder', filter="*.csv")[0]
-        obj = iterators.DateIterator(file_path)
-
-        window_1 = QMessageBox()
-        window_1.addButton('Начать', QMessageBox.AcceptRole)
-        window_1.addButton('Отмена', QMessageBox.RejectRole)
-        window_1.setWindowTitle('Итератор')
-        window_1.exec()
-
-        while True:
-
-            if window_1.clickedButton().text() == 'Начать':
-
-                window_2 = QMessageBox()
-                item = next(obj)
-                text = 'Вывод итератора:' + str(item)
-                window_2.setWindowTitle('Результат итерации')
-                window_2.setText(text)
-                window_2.addButton('Продолжить', QMessageBox.AcceptRole)
-                window_2.addButton('Прекратить итерацию', QMessageBox.RejectRole)
-                window_2.exec()
-
-                if window_2.clickedButton().text() == 'Прекратить итерацию':
-                    break
-
-            elif window_1.clickedButton().text() == 'Отмена':
+        i = 1
+        while i < 2:
+            _msg = QMessageBox()
+            _msg.setWindowTitle('Сообщение')
+            _msg.setText('Выберите исходный файл, по которому провести итерацию')
+            _msg.exec_()
+            file_path = QFileDialog.getOpenFileName(self, 'Select Folder', filter="*.csv")[0]
+            if not os.path.exists(file_path):
                 break
+            obj = iterators.DateIterator(file_path)
+
+            window_1 = QMessageBox()
+            window_1.addButton('Начать', QMessageBox.AcceptRole)
+            window_1.addButton('Отмена', QMessageBox.RejectRole)
+            window_1.setWindowTitle('Итератор')
+            window_1.exec()
+
+            while True:
+
+                if window_1.clickedButton().text() == 'Начать':
+
+                    window_2 = QMessageBox()
+                    item = next(obj)
+                    text = 'Вывод итератора:' + str(item)
+                    window_2.setWindowTitle('Результат итерации')
+                    window_2.setText(text)
+                    window_2.addButton('Продолжить', QMessageBox.AcceptRole)
+                    window_2.addButton('Прекратить итерацию', QMessageBox.RejectRole)
+                    window_2.exec()
+
+                    if window_2.clickedButton().text() == 'Прекратить итерацию':
+                        break
+
+                elif window_1.clickedButton().text() == 'Отмена':
+                    break
+            i = i + 1
+
+    def start_iter_xy(self):
+        i = 1
+        while i < 2:
+            _msg = QMessageBox()
+            _msg.setWindowTitle('Сообщение')
+            _msg.setText('Выберите файл X')
+            _msg.exec_()
+            file_path_1 = QFileDialog.getOpenFileName(self, 'Select Folder', filter="*.csv")[0]
+            if not os.path.exists(file_path_1):
+                break
+            _msg = QMessageBox()
+            _msg.setWindowTitle('Сообщение')
+            _msg.setText('Выберите файл Y')
+            _msg.exec_()
+            file_path_2 = QFileDialog.getOpenFileName(self, 'Select Folder', filter="*.csv")[0]
+            if not os.path.exists(file_path_2):
+                break
+
+            obj = iterators.DateIteratorXY(file_path_1, file_path_2)
+            window_1 = QMessageBox()
+            window_1.addButton('Начать', QMessageBox.AcceptRole)
+            window_1.addButton('Отмена', QMessageBox.RejectRole)
+            window_1.setWindowTitle('Итератор')
+            window_1.exec()
+
+            while True:
+
+                if window_1.clickedButton().text() == 'Начать':
+
+                    window_2 = QMessageBox()
+                    item = next(obj)
+                    text = 'Вывод итератора:' + str(item)
+                    window_2.setWindowTitle('Результат итерации')
+                    window_2.setText(text)
+                    window_2.addButton('Продолжить', QMessageBox.AcceptRole)
+                    window_2.addButton('Прекратить итерацию', QMessageBox.RejectRole)
+                    window_2.exec()
+
+                    if window_2.clickedButton().text() == 'Прекратить итерацию':
+                        break
+
+                elif window_1.clickedButton().text() == 'Отмена':
+                    break
+            i = i + 1
 
 
 if __name__ == "__main__":

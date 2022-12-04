@@ -32,7 +32,7 @@ def get_data_x_y(name_x: str, name_y: str, date: datetime.date) -> list[str] or 
     df_y = pd.read_csv(name_y, sep=';', encoding='cp1251')
     index = -1
     for i in range(df_x.shape[0]):
-        if df_x['Дата'].iloc[i] == str(date):
+        if df_x['Дата'].iloc[i].replace('-', '') == str(date).replace('-', ''):
             index = i
             break
     if index >= 0:
@@ -50,9 +50,9 @@ def get_data_year_or_week(name_y_or_w: str, date: datetime.date) -> list[str] or
     """
     for root, dirs, files in os.walk(name_y_or_w):
         for file in files[0: -1: 1]:
-            df = pd.read_csv(name_y_or_w+file, sep=';', encoding='cp1251')
+            df = pd.read_csv(name_y_or_w + '/' + file, sep=';', encoding='cp1251')
             for i in range(df.shape[0]):
-                if df['Дата'].iloc[i] == str(date) or df['Дата'].iloc[i] == str(date):
+                if df['Дата'].iloc[i].replace('-', '') == str(date).replace('-', ''):
                     return df.iloc[i]
 
 

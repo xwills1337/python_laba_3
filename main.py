@@ -42,17 +42,17 @@ class GismeteoApplication(QWidget):
         btn_5 = QPushButton('Найти данные по дате в файлах X.csv и Y.csv', self)
         btn_5.move(0, 120)
         btn_5.resize(350, 40)
-        # btn_5.clicked.connect()
+        btn_5.clicked.connect(self.start_check_xy)
 
         btn_6 = QPushButton('Найти данные по дате в датасете разбитом по годам', self)
         btn_6.move(0, 160)
         btn_6.resize(350, 40)
-        # btn_6.clicked.connect()
+        btn_6.clicked.connect(self.start_check_year)
 
         btn_7 = QPushButton('Найти данные по дате в датасете разбитом по неделям', self)
         btn_7.move(0, 200)
         btn_7.resize(350, 40)
-        # btn_7.clicked.connect()
+        btn_7.clicked.connect(self.start_check_week)
 
         btn_8 = QPushButton('Вызвать итератор датасета разбитого на файлы X.csv и Y.csv', self)
         btn_8.move(0, 240)
@@ -80,6 +80,147 @@ class GismeteoApplication(QWidget):
         exit_button.resize(350, 40)
 
         self.show()
+
+    def check_date(self, date: str) -> bool:
+        if len(date) != 10:
+            return False
+        if date[4] != '-' or date[7] != '-':
+            return False
+        if int(date[:4]) <= 0:
+            return False
+        if int(date[5:7]) <= 0 or int(date[5:7]) > 12:
+            return False
+        if int(date[8:]) <= 0 or int(date[8:]) > 31:
+            return False
+        return True
+
+    def date_formatter(self, date: str) -> datetime.date:
+
+        year = int(date[:4])
+        month = int(date[5:7])
+        day = int(date[8:])
+
+        return datetime.date(year, month, day)
+
+    def start_check_week(self):
+        i = 1
+        while i < 2:
+            flag = False
+            date = QInputDialog.getText(self, 'Ввод', 'Введите дату в формате iso 8601')
+            date = date[0]
+            if date:
+                if self.check_date(date):
+                    flag = True
+            else:
+                _msg = QMessageBox()
+                _msg.setWindowTitle('Сообщение')
+                _msg.setText('Дата введена некорректно.')
+                _msg.exec_()
+                break
+            if flag:
+                _msg = QMessageBox()
+                _msg.setWindowTitle('Сообщение')
+                _msg.setText('Выберите датасет разбитый по неделям')
+                _msg.exec_()
+
+                file_path = QFileDialog.getExistingDirectory(self, 'Select Folder')
+
+                if not os.path.exists(file_path):
+                    break
+
+                rezult = script_4.get_data_year_or_week(file_path, self.date_formatter(date))
+                if str(rezult) != 'None':
+                    _msg2 = QMessageBox()
+                    _msg2.setWindowTitle('Сообщение')
+                    _msg2.setText(str(rezult))
+                    _msg2.exec_()
+                else:
+                    _msg2 = QMessageBox()
+                    _msg2.setWindowTitle('Сообщение')
+                    _msg2.setText('Данные не были найдены!')
+                    _msg2.exec_()
+            i = i + 1
+
+    def start_check_year(self):
+        i = 1
+        while i < 2:
+            flag = False
+            date = QInputDialog.getText(self, 'Ввод', 'Введите дату в формате iso 8601')
+            date = date[0]
+            if date:
+                if self.check_date(date):
+                    flag = True
+            else:
+                _msg = QMessageBox()
+                _msg.setWindowTitle('Сообщение')
+                _msg.setText('Дата введена некорректно.')
+                _msg.exec_()
+                break
+            if flag:
+                _msg = QMessageBox()
+                _msg.setWindowTitle('Сообщение')
+                _msg.setText('Выберите датасет разбитый по годам')
+                _msg.exec_()
+
+                file_path = QFileDialog.getExistingDirectory(self, 'Select Folder')
+
+                if not os.path.exists(file_path):
+                    break
+
+                rezult = script_4.get_data_year_or_week(file_path, self.date_formatter(date))
+                if str(rezult) != 'None':
+                    _msg2 = QMessageBox()
+                    _msg2.setWindowTitle('Сообщение')
+                    _msg2.setText(str(rezult))
+                    _msg2.exec_()
+                else:
+                    _msg2 = QMessageBox()
+                    _msg2.setWindowTitle('Сообщение')
+                    _msg2.setText('Данные не были найдены!')
+                    _msg2.exec_()
+            i = i + 1
+
+    def start_check_xy(self):
+        i = 1
+        while i < 2:
+            flag = False
+            date = QInputDialog.getText(self, 'Ввод', 'Введите дату в формате iso 8601')
+            date = date[0]
+            if date:
+                if self.check_date(date):
+                    flag = True
+            else:
+                _msg = QMessageBox()
+                _msg.setWindowTitle('Сообщение')
+                _msg.setText('Дата введена некорректно.')
+                _msg.exec_()
+                break
+            if flag:
+                _msg = QMessageBox()
+                _msg.setWindowTitle('Сообщение')
+                _msg.setText('Выберите файл X.csv, затем файл Y.csv')
+                _msg.exec_()
+
+                file_path_1 = QFileDialog.getOpenFileName(self, 'Select Folder', filter="*.csv")[0]
+                file_path_2 = QFileDialog.getOpenFileName(self, 'Select Folder', filter="*.csv")[0]
+
+                if not os.path.exists(file_path_1):
+                    break
+
+                if not os.path.exists(file_path_2):
+                    break
+                rezult = script_4.get_data_x_y(file_path_1, file_path_2, self.date_formatter(date))
+                if str(rezult) != 'None':
+                    _msg2 = QMessageBox()
+                    _msg2.setWindowTitle('Сообщение')
+                    _msg2.setText(str(rezult))
+                    _msg2.exec_()
+                else:
+                    _msg2 = QMessageBox()
+                    _msg2.setWindowTitle('Сообщение')
+                    _msg2.setText('Данные не были найдены!')
+                    _msg2.exec_()
+            i = i + 1
 
     def start_create_week(self):
         i = 1

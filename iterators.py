@@ -4,10 +4,10 @@ import os
 
 
 class DateIterator:
-    def __init__(self):
+    def __init__(self, name):
 
         self.counter = 0
-        self.df = pd.read_csv('data.csv', sep=';', encoding='cp1251')
+        self.df = pd.read_csv(name, sep=';', encoding='cp1251')
 
     def __next__(self) -> tuple:
         if self.counter == self.df.shape[0]:
@@ -24,11 +24,11 @@ class DateIterator:
 
 
 class DateIteratorXY:
-    def __init__(self):
+    def __init__(self, name1, name2):
 
         self.counter = 0
-        self.lf = pd.read_csv('X.csv', sep=';', encoding='cp1251')
-        self.df = pd.read_csv('Y.csv', sep=';', encoding='cp1251')
+        self.lf = pd.read_csv(name1, sep=';', encoding='cp1251')
+        self.df = pd.read_csv(name2, sep=';', encoding='cp1251')
 
     def __next__(self) -> tuple:
         if self.counter == self.df.shape[0]:
@@ -70,10 +70,10 @@ class DateIteratorYearOrWeek:
 
 
 if __name__ == "__main__":
-    # obj = DateIterator()
+    # obj = DateIterator('data.csv')
     # while(True):
     #     print(next(obj))
-    # obj = DateIterator_X_Y()
+    # obj = DateIterator_X_Y('X.csv', 'Y.csv')
     # while(True):
     #     print(next(obj))
     # obj = DateIterator_year_or_week('files_y/')
